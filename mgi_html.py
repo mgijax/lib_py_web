@@ -78,7 +78,7 @@ def mgiRetrieve():
 
 	s = '''\
 <HR>
-<INPUT TYPE=submit VALUE="Retrieve"> <INPUT TYPE=reset VALUE="Reset Form">
+<INPUT TYPE="submit" VALUE="Search"> <INPUT TYPE=reset>
 <HR>
 '''
 	return s
