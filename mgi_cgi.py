@@ -35,6 +35,11 @@ from types import *
 error = 'FieldStorageError'
 
 def processDisplayFields(displayFields,nots) :
+    # Purpose: Convert displayFields into a slightly more user
+    #          readable format by modifying some operators and values.
+    # Returns: a modified version of displayFields
+    # Assumes: nothing
+    # Effects: nothing
     for key in displayFields.keys():
         if displayFields[key]['val'] is None:
             if displayFields[key]['op'] == 'is null':
@@ -72,12 +77,12 @@ class Field:
 
     def __repr__(self) :
         rep = ''
-        if len(self.name) > 1  :
+        if len(self.name) > 0  :
             rep = '<B>'+str(self.name) + ':</B> '
             if self.op != None and self.value != None:
                 if self.op in self.opList.keys() :
-                    self.op = self.opList[self.op]
-                rep = rep + str(self.op) + ' <i>' + str(self.value) + '</i>'
+                    op = self.opList[self.op]
+                rep = rep + str(op) + ' <i>' + str(self.value) + '</i>'
         return rep
 
 
@@ -92,8 +97,8 @@ class FieldStorage:
         #get the arguments from standard in
         form = cgi.FieldStorage()
 
-	# preserve the original submission from the form or URL
-	self.cgiFieldStorage = form
+    # preserve the original submission from the form or URL
+    self.cgiFieldStorage = form
 
         nots = []
         keys = form.keys()
@@ -172,9 +177,9 @@ class FieldStorage:
                             miniItem.value)
                 else: # It's an instance
                     fields[fieldName]['val'] = [item.value]
-	
-	# Now that the initial construction is taken care of, save the 
-	# operators and values before they are made into SQL.
+    
+    # Now that the initial construction is taken care of, save the 
+    # operators and values before they are made into SQL.
         displayFields = copy.deepcopy(fields)
         # Modify the operators for display
         self.displayFields = processDisplayFields(displayFields,nots)
