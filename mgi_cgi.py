@@ -80,6 +80,7 @@ class Field:
         if len(self.name) > 0  :
             rep = '<B>'+str(self.name) + ':</B> '
             if self.op != None and self.value != None:
+                op = self.op
                 if self.op in self.opList.keys() :
                     op = self.opList[self.op]
                 rep = rep + str(op) + ' <i>' + str(self.value) + '</i>'
