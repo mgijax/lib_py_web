@@ -1,0 +1,6 @@
+TAG: lib_py_web-1-0-9
+DATE: 10/10/2003
+STAFF: jsb
+RELEASE: alpha
+CHANGES:
+1) changes to mgi_cgi.py to help with formatting of output for FieldStorage
