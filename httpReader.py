@@ -264,6 +264,18 @@ class httpReader:
 			# get the reply and read it into a list of strings
 
 			(code, message, headers) = conn.getreply()
+
+
+			if (message == 'Moved'):
+				movedTo = headers.getheader('Location')
+				del conn
+				conn = httplib.HTTP (self.server)
+				conn.putrequest ('GET', movedTo)
+				conn.putheader ('User-Agent', 'Mozilla')
+				conn.endheaders()
+
+				(code, message, headers) = conn.getreply()
+
 			fp = conn.getfile()
 			page = fp.readlines()
 			fp.close()
