@@ -16,7 +16,7 @@
 # USING THE FormContent CLASS
 #
 # See the web interface CGI scripts for examples.  You will probably want to
-# create DEFAULT_FIELDS and DEFAULT_TYPES dictioaries as is done there.
+# create DEFAULT_FIELDS and DEFAULT_TYPES dictionaries as is done there.
  
 # Imports
 # =======
@@ -34,200 +34,247 @@ from types import *
 
 error = 'FieldStorageError'
 
+def processDisplayFields(displayFields,nots) :
+    for key in displayFields.keys():
+        if displayFields[key]['val'] is None:
+            if displayFields[key]['op'] == 'is null':
+                displayFields[key]['val'] = 'null'
+                displayFields[key]['op'] = 'is'
+            else:
+                del displayFields[key]  
+    # Modify operators if NOT has been checked.
+    for key in nots:
+        if displayFields.has_key(key):
+            if displayFields[key]['op'] == '=':
+                displayFields[key]['op'] = '!='
+            elif displayFields[key]['op'] == 'is':
+                displayFields[key]['op'] = 'is not'
+            else: # The operator is 'like', 'begins', etc.
+                displayFields[key]['op'] = 'not '+displayFields[key]['op']
+    return displayFields       
 
 # Classes
 # =======
 
 class Field:
-	def __init__(self, name, op, value):
-		self.name = name
-		self.op = op
-		self.value = value
+
+    opList = {
+        '='         :'equals',
+        'begins'    :'begins with',
+        '!='        :'is not equal to',
+    }
+
+
+    def __init__(self, name, op, value):
+        self.name = name
+        self.op = op
+        self.value = value
+
+    def __repr__(self) :
+        rep = ''
+        if len(self.name) > 1  :
+            rep = '<B>'+str(self.name) + ':</B> '
+            if self.op != None and self.value != None:
+                if self.op in self.opList.keys() :
+                    self.op = self.opList[self.op]
+                rep = rep + str(self.op) + ' <i>' + str(self.value) + '</i>'
+        return rep
 
 
 class FieldStorage:
-	def __init__(self, defaultFields={}, defaultTypes={}):
-		# Make sure we don't modify the arguments
-		fields = copy.deepcopy(defaultFields)
+    def __init__(self, originalFields={}, fieldTypes={}):
+        # Store a safe copy for posible later use
+        self.originalFields = copy.deepcopy(originalFields)
+        # Make sure we don't chnage the originals in case the caller uses them
+        fields = copy.deepcopy(originalFields)
 
-		delim = ':'
-		form = cgi.FieldStorage()
+        delim = ':'
+        #get the arguments from standard in
+        form = cgi.FieldStorage()
 
-		nots = []
-		keys = form.keys()
+        nots = []
+        keys = form.keys()
 
-		# 1st pass - Get operators and values.
-		for key in keys:
-			# due differences in the way browsers quote (or don't)
-			# the text they submit, we first retrieve the value
-			# and then unquote the key (TR 2739)
+        # 1st pass - Get operators and values.   
+        for key in keys:
+            # due differences in the way browsers use escape characters
+            # (or don't) in the text they submit, we first retrieve the
+            # value and then unquote the key (TR 2739)
 
-			item = form[key]
-			key = urllib.unquote(key)
-			if string.find(key, delim) != -1:
-				fieldType = string.split(key, delim)[0]
-				fieldName = string.split(key, delim)[1]
-			elif defaultTypes.has_key(key):
-				fieldType = defaultTypes[key]
-				fieldName = key
-			else:
-				raise KeyError, key
+            item = form[key]
+            key = urllib.unquote(key)
+            # determine the type of the argument.  If none specified,
+            # use the default
+            if string.find(key, delim) != -1:
+                fieldType = string.split(key, delim)[0]
+                fieldName = string.split(key, delim)[1]
+            elif fieldTypes.has_key(key):
+                fieldType = fieldTypes[key]
+                fieldName = key
+            else:
+                raise KeyError, key
 
-			if fieldType == 'op':
-				fields[fieldName]['op'] = item.value
-			elif fieldType == 'not':
-				nots.append(fieldName)
-			elif fieldType == 'string':
-				fields[fieldName]['val'] = item.value
-			elif fieldType == 'int':
-				fields[fieldName]['val'] = \
-					string.atoi(item.value)
-			elif fieldType == 'float':
-				try:
-					fields[fieldName]['val'] = \
-						string.atof(item.value)
-				except:
-					raise error, 'Unable to convert the ' \
-						+ 'value "' + str(item.value) \
-						+ '" to a number for field "' \
-						+ fieldName + '".'
-			elif fieldType == 'int_list':
-				if type(item) is ListType:
-					fields[fieldName]['val'] = []
-					for miniItem in item:
-						fields[fieldName]['val'].append(
-							string.atoi(
-								miniItem.value))
-				elif type(item.value) is StringType:
-					fields[fieldName]['val'] = []
-					for s in string.split(item.value, ','):
-						fields[fieldName]['val'].append(
-							string.atoi(s))
-				else: # It's an instance
-					fields[fieldName]['val'] = \
-						item.value
-			elif fieldType == 'string_list':
-				if type(item) is ListType:
-					fields[fieldName]['val'] = []
-					for miniItem in item:
-						fields[fieldName]['val'].append(
-							miniItem.value)
-				elif type(item.value) is StringType:
-					item.value = regsub.gsub(', ', ',',
-						item.value)
-					fields[fieldName]['val'] = \
-						string.split(item.value, ',')
-				else: # It's an instance
-					fields[fieldName]['val'] = \
-						item.value
-			elif fieldType == 'option_list':
-				if type(item) is ListType:
-					fields[fieldName]['val'] = []
-					for miniItem in item:
-						fields[fieldName]['val'].append(
-							miniItem.value)
-				else: # It's an instance
-					fields[fieldName]['val'] = [item.value]
+            if fieldType == 'op':
+                fields[fieldName]['op'] = item.value
+            elif fieldType == 'not':
+                nots.append(fieldName)
+            elif fieldType == 'string':
+                fields[fieldName]['val'] = item.value
+            elif fieldType == 'int':
+                fields[fieldName]['val'] = \
+                    string.atoi(item.value)
+            elif fieldType == 'float':
+                try:
+                    fields[fieldName]['val'] = \
+                        string.atof(item.value)
+                except:
+                    raise error, 'Unable to convert the ' \
+                        + 'value "' + str(item.value) \
+                        + '" to a number for field "' \
+                        + fieldName + '".'
+            elif fieldType == 'int_list':
+                if type(item) is ListType:
+                    fields[fieldName]['val'] = []
+                    for miniItem in item:
+                        fields[fieldName]['val'].append(
+                            string.atoi(
+                                miniItem.value))
+                elif type(item.value) is StringType:
+                    fields[fieldName]['val'] = []
+                    for s in string.split(item.value, ','):
+                        fields[fieldName]['val'].append(
+                            string.atoi(s))
+                else: # It's an instance
+                    fields[fieldName]['val'] = \
+                        item.value
+            elif fieldType == 'string_list':
+                if type(item) is ListType:
+                    fields[fieldName]['val'] = []
+                    for miniItem in item:
+                        fields[fieldName]['val'].append(
+                            miniItem.value)
+                elif type(item.value) is StringType:
+                    item.value = regsub.gsub(', ', ',',
+                        item.value)
+                    fields[fieldName]['val'] = \
+                        string.split(item.value, ',')
+                else: # It's an instance
+                    fields[fieldName]['val'] = \
+                        item.value
+            elif fieldType == 'option_list':
+                if type(item) is ListType:
+                    fields[fieldName]['val'] = []
+                    for miniItem in item:
+                        fields[fieldName]['val'].append(
+                            miniItem.value)
+                else: # It's an instance
+                    fields[fieldName]['val'] = [item.value]
+	
+	# Now that the initial construction is taken care of, save the 
+	# operators and values before they are made into SQL.
+        displayFields = copy.deepcopy(fields)
+        # Modify the operators for display
+        self.displayFields = processDisplayFields(displayFields,nots)
+      
+        # 2nd pass - Modify values as necessary.  Delete field if None.
+        for key in fields.keys():
+            if fields[key]['val'] is None:
+                if fields[key]['op'] == 'is null':
+                    fields[key]['val'] = 'null'
+                    fields[key]['op'] = 'is'
+                else:
+                    del fields[key]
+            elif fields[key]['op'] == 'begins':
+                fields[key]['op'] = 'like'
+                if type(fields[key]['val']) is StringType:
+                    fields[key]['val'] = fields[key]['val']\
+                        + '%'
+                elif type(fields[key]['val']) is ListType:
+                    for i in range(len(fields[key]['val'])):
+                        fields[key]['val'][i] = \
+                            fields[key]['val'][i] \
+                            + '%'
+            elif fields[key]['op'] == 'ends':
+                fields[key]['op'] = 'like'
+                if type(fields[key]['val']) is StringType:
+                    fields[key]['val'] = '%' \
+                        + fields[key]['val']
+                elif type(fields[key]['val']) is ListType:
+                    for i in range(len(fields[key]['val'])):
+                        fields[key]['val'][i] = '%' \
+                            + fields[key]['val'][i]
+            elif fields[key]['op'] == 'contains':
+                fields[key]['op'] = 'like'
+                if type(fields[key]['val']) is StringType:
+                    fields[key]['val'] = '%' \
+                        + fields[key]['val'] \
+                        + '%'
+                elif type(fields[key]['val']) is ListType:
+                    for i in range(len(fields[key]['val'])):
+                        fields[key]['val'][i] = '%' \
+                            + fields[key]['val'][i]\
+                            + '%'
+
+        # Modify operators if NOT has been checked.
+        for key in nots:
+            if fields.has_key(key):
+                if fields[key]['op'] == '=':
+                    fields[key]['op'] = '!='
+                elif fields[key]['op'] == 'is':
+                    fields[key]['op'] = 'is not'
+                else: # The operator is 'like', 'begins', etc.
+                    fields[key]['op'] = 'not ' \
+                        + fields[key]['op']
+
+        self.fields = fields
+
+    def __getitem__(self, key):
+        op = self.fields[key]['op']
+        value = self.fields[key]['val']
+        name = key
+
+        return Field(name, op, value)
+
+    def addField (self,
+        key,        # string; name of field
+        op,     # string; operator
+        value       # variable type; value of field
+        ):
+        # Purpose: allow us to programmatically add additional fields
+        #   to the FieldStorage object, even though they may not
+        #   have come in as input parameters
+        # Returns: nothing
+        # Assumes: nothing
+        # Effects: adds an 'op'erator and 'value' for a new
+        #   parameter 'key', or overwrites the old ones if an
+        #   entry for 'key' already exists
+        # Throws: nothing
+        # Notes: I added this method as a result of TR 2097.  It
+        #   became useful to add default parameter values in a
+        #   different way for special cases, like querying
+        #   expression data by edinburghKey.
+
+        self.fields[key] = { 'op' : op, 'val' : value }
+        return
+
+    def keys(self):
+        return self.fields.keys()
 
 
-		# 2nd pass - Modify values as necessary.  Delete field if None.
-		for key in fields.keys():
-			if fields[key]['val'] is None:
-				if fields[key]['op'] == 'is null':
-					fields[key]['val'] = 'null'
-					fields[key]['op'] = 'is'
-				else:
-					del fields[key]
-			elif fields[key]['op'] == 'begins':
-				fields[key]['op'] = 'like'
-				if type(fields[key]['val']) is StringType:
-					fields[key]['val'] = fields[key]['val']\
-						+ '%'
-				elif type(fields[key]['val']) is ListType:
-					for i in range(len(fields[key]['val'])):
-						fields[key]['val'][i] = \
-							fields[key]['val'][i] \
-							+ '%'
-			elif fields[key]['op'] == 'ends':
-				fields[key]['op'] = 'like'
-				if type(fields[key]['val']) is StringType:
-					fields[key]['val'] = '%' \
-						+ fields[key]['val']
-				elif type(fields[key]['val']) is ListType:
-					for i in range(len(fields[key]['val'])):
-						fields[key]['val'][i] = '%' \
-							+ fields[key]['val'][i]
-			elif fields[key]['op'] == 'contains':
-				fields[key]['op'] = 'like'
-				if type(fields[key]['val']) is StringType:
-					fields[key]['val'] = '%' \
-						+ fields[key]['val'] \
-						+ '%'
-				elif type(fields[key]['val']) is ListType:
-					for i in range(len(fields[key]['val'])):
-						fields[key]['val'][i] = '%' \
-							+ fields[key]['val'][i]\
-							+ '%'
-
-		# Modify operators if NOT has been checked.
-		for key in nots:
-			if fields.has_key(key):
-				if fields[key]['op'] == '=':
-					fields[key]['op'] = '!='
-				elif fields[key]['op'] == 'is':
-					fields[key]['op'] = 'is not'
-				else: # The operator is 'like', 'begins', etc.
-					fields[key]['op'] = 'not ' \
-						+ fields[key]['op']
-
-		self.fields = fields
-
-	def __getitem__(self, key):
-		op = self.fields[key]['op']
-		value = self.fields[key]['val']
-		name = key
-
-		return Field(name, op, value)
-
-	def addField (self,
-		key,		# string; name of field
-		op,		# string; operator
-		value		# variable type; value of field
-		):
-		# Purpose: allow us to programmatically add additional fields
-		#	to the FieldStorage object, even though they may not
-		#	have come in as input parameters
-		# Returns: nothing
-		# Assumes: nothing
-		# Effects: adds an 'op'erator and 'value' for a new
-		#	parameter 'key', or overwrites the old ones if an
-		#	entry for 'key' already exists
-		# Throws: nothing
-		# Notes: I added this method as a result of TR 2097.  It
-		#	became useful to add default parameter values in a
-		#	different way for special cases, like querying
-		#	expression data by edinburghKey.
-
-		self.fields[key] = { 'op' : op, 'val' : value }
-		return
-
-	def keys(self):
-		return self.fields.keys()
+    def has_key(self, key):
+        return self.fields.has_key(key)
 
 
-	def has_key(self, key):
-		return self.fields.has_key(key)
-
-
-	def __repr__(self):
-		s = '<dl>\n'
-		keys = self.fields.keys()
-		keys.sort()
-		for key in keys:
-			s = s + '<dt>' + key + '\n'
-			s = s + '<dd>' + str(self.fields[key]) + '\n'
-		s = s + '</dl>\n'
-		return s
+    def __repr__(self):
+        s = '<dl>\n'
+        keys = self.fields.keys()
+        keys.sort()
+        for key in keys:
+            s = s + '<dt>' + key + '\n'
+            s = s + '<dd>' + str(self.fields[key]) + '\n'
+        s = s + '</dl>\n'
+        return s
+        
 #
 # Warranty Disclaimer and Copyright Notice
 # 
