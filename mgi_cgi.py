@@ -50,7 +50,7 @@ class FieldStorage:
 		# Make sure we don't modify the arguments
 		fields = copy.deepcopy(defaultFields)
 
-		delim = string.upper(urllib.quote(':'))
+		delim = ':'
 		form = cgi.FieldStorage()
 
 		nots = []
@@ -58,7 +58,12 @@ class FieldStorage:
 
 		# 1st pass - Get operators and values.
 		for key in keys:
+			# due differences in the way browsers quote (or don't)
+			# the text they submit, we first retrieve the value
+			# and then unquote the key (TR 2739)
+
 			item = form[key]
+			key = urllib.unquote(key)
 			if string.find(key, delim) != -1:
 				fieldType = string.split(key, delim)[0]
 				fieldName = string.split(key, delim)[1]
