@@ -14,6 +14,7 @@
 import tempfile
 import rand
 import os
+import time
 
 tempdir = "/home/jw/public_html/ftp/"
 template = "test"
@@ -63,8 +64,9 @@ class FTPManager:
         #          directory specified by the sessionID.
         # Comments: none.    
         dirName = self.sessions[sessionID]
-        self.log('Attempting to write %i files for sessionID %s.' % \
-                 (len(fileDict.keys()),sessionID))
+      
+        self.log('%sAttempting to write %i files for sessionID %s.\n' % \
+                 (self.getTimeStamp(),len(fileDict.keys()),sessionID))
         for key in fileDict.keys() :
             fd = open(str(self.ftpPath)+str(dirName)+"/"+str(key),'w')
             fd.write(str(fileDict[key]))
@@ -73,8 +75,10 @@ class FTPManager:
             os.system('chmod 777 %s/*' % self.ftpPath+dirName )
             os.system('chgrp www %s' % self.ftpPath+dirName)
             os.system('ghgrp www %s/*' % self.ftpPath+dirName)
-        self.log('Writing sucessful!  %i files logged for %s.' %\
-                 (len(fileDict.keys()),sessionID))
+        myTime = time.strftime ('%m/%d/%Y at %I:%M %p %Z',
+                                time.localtime(time.time()))              
+        self.log('%sWriting sucessful!  %i files logged for sessionID %s.\n' %\
+                 (self.getTimeStamp(),len(fileDict.keys()),sessionID))
             
     def closeSession(self,sessionID) :
         # Inputs:  a sessionID, obtained from createSession.
@@ -95,6 +99,19 @@ class FTPManager:
         dirName = self.sessions[sessionID]
         s = str(self.ftpURL)+str(dirName)+'/'
         return s
+
     def log(self,logText) :
-        print 'logging!'
+        # Inputs: The text to be written to the log file
+        # Returns: nothing.
+        # Assumes: self.logPath has been set to a writable file.
+        # Effects: Writes log text to file specified by self.logPath
+        # Comments: none.    
+        fd = open(self.logPath,'a')
+        fd.write(logText)
+        fd.flush()
+        fd.close()    
         
+    def getTimeStamp(self) :
+        myTime = time.strftime ('%m/%d/%Y %I:%M',
+                                time.localtime(time.time()))  
+        return '[%s]' % myTime                               
