@@ -184,6 +184,27 @@ class FieldStorage:
 
 		return Field(name, op, value)
 
+	def addField (self,
+		key,		# string; name of field
+		op,		# string; operator
+		value		# variable type; value of field
+		):
+		# Purpose: allow us to programmatically add additional fields
+		#	to the FieldStorage object, even though they may not
+		#	have come in as input parameters
+		# Returns: nothing
+		# Assumes: nothing
+		# Effects: adds an 'op'erator and 'value' for a new
+		#	parameter 'key', or overwrites the old ones if an
+		#	entry for 'key' already exists
+		# Throws: nothing
+		# Notes: I added this method as a result of TR 2097.  It
+		#	became useful to add default parameter values in a
+		#	different way for special cases, like querying
+		#	expression data by edinburghKey.
+
+		self.fields[key] = { 'op' : op, 'val' : value }
+		return
 
 	def keys(self):
 		return self.fields.keys()
