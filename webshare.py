@@ -227,7 +227,7 @@ class SharedComponent:
 		#	sheet.
 
 		# start with the required piece
-		parts = [ 'IMG SRC="%s"' % self.url ]
+		parts = [ 'IMG SRC="%s" BORDER=0' % self.url ]
 
 		# add the optional pieces as needed
 
