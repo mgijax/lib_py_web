@@ -1,3 +1,10 @@
+TAG: lib_py_web-1-0-10
+DATE: 10/27/2003
+STAFF: jsb
+RELEASE: alpha
+CHANGES:
+1) updated mgi_cgi.py to fix 'is not null' handling
+
 TAG: lib_py_web-1-0-9
 DATE: 10/10/2003
 STAFF: jsb
