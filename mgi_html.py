@@ -84,18 +84,39 @@ def mgiRetrieve():
 	return s
 
 
-def mgiMaxReturn():
-	"""Returns a string representation of the maxreturn section of forms."""
+def mgiMaxReturn (
+	fieldname = '*limit',		# string; name of the HTML form field
+	counts = [ 100, 500, 0 ],	# list of integers; count options
+	default = 500			# integer; which count is the default?
+	):
+	# Purpose: returns a string representing the "maximum number of items
+	#	returned" section of an HTML form
+	# Returns: string
+	# Assumes: nothing
+	# Effects: nothing
+	# Throws: nothing
+	# Notes: The default value for each parameter above is the standard
+	#	set for the MGI WI, as of the 2.8 release.  A count of 0 is
+	#	interpreted to be 'No limit'.
 
-	s = '''\
-<b>Max number of items returned:</b>
-<INPUT TYPE="radio" NAME="*limit" VALUE="10">10
-<INPUT TYPE="radio" NAME="*limit" VALUE="100" CHECKED>100
-<INPUT TYPE="radio" NAME="*limit" VALUE="500">500
-<INPUT TYPE="radio" NAME="*limit" VALUE="0">No limit
-<BR>
-'''
-	return s
+	unchecked = '<INPUT TYPE="radio" NAME="%s" VALUE="%s">%s'
+	checked = '<INPUT TYPE="radio" NAME="%s" VALUE="%s" CHECKED>%s'
+
+	list = [ '<B>Max number of items returned:</B>' ]
+
+	for count in counts:
+		if count == default:
+			template = checked
+		else:
+			template = unchecked
+
+		if count == 0:
+			list.append(template % (fieldname, count, 'No limit'))
+		else:
+			list.append(template % (fieldname, count, count))
+
+	list.append ('<BR>')
+	return string.join (list, '\n')
 
 
 def get_fields(content = None):
