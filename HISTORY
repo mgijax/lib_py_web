@@ -1,3 +1,10 @@
+TAG: lib_py_web-1-0-11
+DATE: 01/29/2004
+STAFF: jsb
+RELEASE: alpha
+CHANGES:
+1) added new 'webshare.py' library
+
 TAG: lib_py_web-1-0-10
 DATE: 10/27/2003
 STAFF: jsb
