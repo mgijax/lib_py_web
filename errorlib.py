@@ -118,7 +118,7 @@ def message (
 		<CENTER>
 		<A HREF="mailto:mgi-help@informatics.jax.org">mgi-help@informatics.jax.org</A>
 		</CENTER><P> 
-		lease include the following information in your message:
+		Please include the following information in your message:
 		<UL>
 		<LI>Date and time
 		<LI>Brief description of problem
