@@ -92,6 +92,9 @@ class FieldStorage:
         #get the arguments from standard in
         form = cgi.FieldStorage()
 
+	# preserve the original submission from the form or URL
+	self.cgiFieldStorage = form
+
         nots = []
         keys = form.keys()
 
@@ -275,6 +278,19 @@ class FieldStorage:
         s = s + '</dl>\n'
         return s
         
+    def getCgiFieldStorage (self):
+            # Purpose: get the cgi.FieldStorage object for the fields that
+            #       were actually submitted (not including the extra
+            #       parsing or the default values handled in the
+            #       constructor for mgi_cgi.FieldStorage)
+            # Returns: cgi.FieldStorage -- this is a copy, so you can
+            #       modify it without worrying about side effects
+            # Assumes: nothing
+            # Effects: nothing
+            # Throws: nothing
+
+            return copy.copy(self.cgiFieldStorage)
+
 #
 # Warranty Disclaimer and Copyright Notice
 # 
