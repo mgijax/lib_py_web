@@ -25,7 +25,7 @@ class FTPManager:
     ftpPath = '/home/jw/public_html/ftp/'
     ftpURL = 'http://rohan/~jw/ftp/'   
 
-    def __init__(self,ftpPath,ftpURL,logPath='/logs/ftp/') :
+    def __init__(self,ftpPath,ftpURL,logPath=None) :
         global tempdir,template
         # Inputs: none.
         # Returns: none.
@@ -106,10 +106,11 @@ class FTPManager:
         # Assumes: self.logPath has been set to a writable file.
         # Effects: Writes log text to file specified by self.logPath
         # Comments: none.    
-        fd = open(self.logPath,'a')
-        fd.write(logText)
-        fd.flush()
-        fd.close()    
+	if self.logPath != None:
+	        fd = open(self.logPath,'a')
+	       	fd.write(logText)
+	        fd.flush()
+	        fd.close()    
         
     def getTimeStamp(self) :
         myTime = time.strftime ('%m/%d/%Y %I:%M',
