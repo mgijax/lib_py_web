@@ -97,8 +97,8 @@ class FieldStorage:
         #get the arguments from standard in
         form = cgi.FieldStorage()
 
-    # preserve the original submission from the form or URL
-    self.cgiFieldStorage = form
+        # preserve the original submission from the form or URL
+        self.cgiFieldStorage = form
 
         nots = []
         keys = form.keys()
@@ -178,8 +178,8 @@ class FieldStorage:
                 else: # It's an instance
                     fields[fieldName]['val'] = [item.value]
     
-    # Now that the initial construction is taken care of, save the 
-    # operators and values before they are made into SQL.
+        # Now that the initial construction is taken care of, save the 
+        # operators and values before they are made into SQL.
         displayFields = copy.deepcopy(fields)
         # Modify the operators for display
         self.displayFields = processDisplayFields(displayFields,nots)
