@@ -232,6 +232,88 @@ def escape(html):
 		html = ''
 	return html
 
+###--- Other Functions ---###
+
+def doSubSupTags (
+	s		# string; source string you want marked up
+	):
+	# Purpose: take string 's' and replace <...> with HTML superscript
+	#	tags, and >...< with HTML subscript tags
+	# Returns: marked-up copy of 's'
+	# Assumes: nothing
+	# Effects: nothing
+	# Throws: nothing
+	# Notes: In an effort to be resilient, this function does the best it
+	#	can in the event of mismatched > and < signs.  It converts
+	#	the most-local (innermost) pairs and converts any non-matched
+	#	> signs to &gt; and any < signs to &lt; for the user's
+	#	browser.  This function never creates nested tags.  See the
+	#	examples.
+	# Examples:
+	#	doSubSupTags('Do >subscript< here')
+	#	  ==> 'Do <SUB>subscript</SUB> here'
+	#	doSubSupTags('Text >down< then <up>')
+	#	  ==> 'Text <SUB>down</SUB> then <SUP>up</SUP>'
+	#	doSubSupTags('My > >best>guess< <is>here<')
+	#	  ==> 'My &gt; &gt;best<SUB>guess</SUB> <SUP>is</SUP>here&lt;'
+
+	gtPos = None	# int; position of last unmatched > found in 's'
+	ltPos = None	# int; position of last unmatched < found in 's'
+	lens = len(s)	# int; length of string 's'
+	t = []		# list of strings; collects elements to be used in
+			#	building the string to return
+
+	for i in range(0, lens):
+		t.append (s[i])		# each element of 't' begins as a
+					# single character from 's'
+
+		if s[i] == '<':
+			# if we've previously seen a > to match this <,
+			# then replace both with subscript tags.
+
+			if gtPos != None:
+				t[i] = '</SUB>'
+				t[gtPos] = '<SUB>'
+				gtPos = None
+
+			# otherwise, just remember this < so we can hopefully
+			# find a matching > later.  (Replace a previously seen
+			# < with &lt;)
+
+			else:
+				if ltPos != None:
+					t[ltPos] = '&lt;'
+				ltPos = i
+
+		elif s[i] == '>':
+			# if we've previously seen a < to match this >,
+			# then replace both with superscript tags.
+
+			if ltPos != None:
+				t[i] = '</SUP>'
+				t[ltPos] = '<SUP>'
+				ltPos = None
+
+			# otherwise, just remember this > so we can hopefully
+			# find a matching < later.  (Replace a previously seen
+			# > with &gt;)
+
+			else:
+				if gtPos != None:
+					t[gtPos] = '&gt;'
+				gtPos = i
+
+	# if we ended with a < or > still unmatched, convert it as needed
+
+	if gtPos != None:
+		t[gtPos] = '&gt;'
+	if ltPos != None:
+		t[ltPos] = '&lt;'
+
+	# join the elements in 't' into a single string and return it
+
+	return string.join (t, '')
+
 def stripHtmlTags (
 	source,		# string or list of strings; text to have its HTML
 			#	tags removed
@@ -373,7 +455,7 @@ def deleteTags (
 				openTags.append (tag)
 			tag = '<'
 
-		elif c == '>':
+		elif c == '>' and tag:
 			# if we've reached the close of a tag, then we need
 			# to strip it down to just the delimiters it contains
 			# (or an empty string if we're not using a delimiter)
@@ -406,6 +488,12 @@ def deleteTags (
 			# for the string we're producing -- 't'
 
 			t = t + c
+
+	# if we reached the end of the string with an open tag, then it may
+	# have just been a < sign at the start.  Just add the string to t.
+
+	if tag:
+		t = t + tag
 	return t
 
 #
