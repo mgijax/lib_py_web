@@ -1,3 +1,10 @@
+TAG: lib_py_web-1-0-13
+DATE: 02/10/2004
+STAFF: jsb, jw
+RELEASE: alpha
+CHANGES:
+1) added new FTPManager.py library
+
 TAG: lib_py_web-1-0-12
 DATE: 02/04/2004
 STAFF: jsb
