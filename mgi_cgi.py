@@ -45,6 +45,9 @@ def processDisplayFields(displayFields,nots) :
             if displayFields[key]['op'] == 'is null':
                 displayFields[key]['val'] = 'null'
                 displayFields[key]['op'] = 'is'
+	    elif displayFields[key]['op'] == 'is not null':
+		displayFields[key]['val'] = 'not null'
+		displayFields[key]['op'] = 'is'
             else:
                 del displayFields[key]  
     # Modify operators if NOT has been checked.
@@ -191,6 +194,9 @@ class FieldStorage:
                 if fields[key]['op'] == 'is null':
                     fields[key]['val'] = 'null'
                     fields[key]['op'] = 'is'
+		elif fields[key]['op'] == 'is not null':
+                    fields[key]['val'] = 'null'
+                    fields[key]['op'] = 'is not'
                 else:
                     del fields[key]
             elif fields[key]['op'] == 'begins':
