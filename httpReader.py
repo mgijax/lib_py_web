@@ -21,7 +21,9 @@ import AlarmClock	# MGI libraries
 
 error = 'httpReader.error'	# exception to be raised by this module
 DEFAULT_TIMEOUT = 120		# two minutes is the default for timing out
-server_re = regex.compile ('[a-zA-Z]+://\([^/]+\)')	# locate server in URL
+
+# locate server and request in URL
+server_re = regex.compile ('[a-zA-Z]+://\([^/]+\)\(.*\)')  
 
 ###--- Public Function ---###
 
@@ -100,6 +102,7 @@ class httpReader:
 		# propagates error
 		self.parms = {}			# set up the defaults
 		self.baseURL = ''
+		self.request = ''
 		self.server = ''
 		self.timeout = timeout		# handle the parameters
 		self.setBaseURL (baseURL)
@@ -119,8 +122,9 @@ class httpReader:
 		global server_re
 
 		if server_re.match (baseURL) == -1:
-			raise error, 'Cannot find server in the given URL'
+			raise error, 'Cannot find server and request in the given URL'
 		self.server = server_re.group(1)
+		self.request = server_re.group(2)
 		self.baseURL = baseURL
 		return
 
@@ -253,7 +257,7 @@ class httpReader:
 			# open the connection and send the request
 
 			conn = httplib.HTTP (self.server)
-			conn.putrequest ('GET', request)
+			conn.putrequest ('GET', self.request)
 			conn.putheader ('User-Agent', 'Mozilla')
 			conn.endheaders()
 
