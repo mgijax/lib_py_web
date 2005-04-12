@@ -252,7 +252,7 @@ class SharedComponent:
 		# Notes: If you'd rather not call this directly, you may use
 		#	self.getHtmlTag() in case this component is an image.
 
-		return '<LINK REL="stylesheet" HREF="%s">' % self.url
+		return '<LINK REL="stylesheet" HREF="%s" TYPE="text/css">' % self.url
 
 	def getHtmlTag (self):
 		# Purpose: get the HTML tag appropriate for this component
