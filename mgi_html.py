@@ -11,7 +11,7 @@ import regex
 import regsub
 import cgi
 import urllib
-import rand
+import random
 from signal import signal, alarm, SIGALRM
 
 # global variable:
@@ -417,7 +417,7 @@ def joinUnique (
 	# one of the strings of 'list'.
 
 	if not separator:
-		sep = rand.choice (string.letters)
+		sep = random.choice (string.letters)
 		while 1:
 			# we need to see if the current 'sep' occurs in a
 			# string of 'list'.
@@ -429,7 +429,7 @@ def joinUnique (
 
 				if string.find (item, sep) != -1:
 					sep = sep + \
-						rand.choice (string.letters)
+						random.choice (string.letters)
 					break
 
 			# if the 'for' loop terminates normally, then we have

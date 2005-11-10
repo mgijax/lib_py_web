@@ -12,7 +12,7 @@
 #
 
 import tempfile
-import rand
+import random
 import os
 import time
 
@@ -46,9 +46,9 @@ class FTPManager:
         # Assumes: none.
         # Effects: creates a directory associated with the sessionKey
         # Comments: none.    
-        sessionID = rand.rand()
+        sessionID = random.rand()
         while sessionID in self.sessions.keys():
-            sessionID = rand.rand()
+            sessionID = random.rand()
         dirPath = tempfile.mktemp()
         os.mkdir(dirPath)
         self.sessions[sessionID] = dirPath[len(self.ftpPath):]
