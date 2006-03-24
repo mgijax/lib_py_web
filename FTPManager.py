@@ -46,9 +46,9 @@ class FTPManager:
         # Assumes: none.
         # Effects: creates a directory associated with the sessionKey
         # Comments: none.    
-        sessionID = random.rand()
+        sessionID = random.random()
         while sessionID in self.sessions.keys():
-            sessionID = random.rand()
+            sessionID = random.random()
         dirPath = tempfile.mktemp()
         os.mkdir(dirPath)
         self.sessions[sessionID] = dirPath[len(self.ftpPath):]
