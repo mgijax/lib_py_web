@@ -1,7 +1,18 @@
+TAG: lib_py_web-3-5-0-1
+DATE: 05/01/2006
+STAFF: dbm
+CHANGES:
+1) Merge configuration changes from tr6549 branch
+
 TAG: lib_py_web-tr7379-BP
 DATE: 3/24/2006
 STAFF: pf
 CHANGES: Branch point tag for 3.44
+
+TAG: lib_py_web-tr6594-1
+DATE: 3/27/2006
+STAFF: dbm
+CHANGES: Initial tag for TR6594 testing
 
 TAG: lib_py_web-tr6594-BP
 DATE: 3/16/2006
