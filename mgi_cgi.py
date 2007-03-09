@@ -22,6 +22,7 @@
 # =======
  
 import cgi
+import sys
 import urllib
 import string
 import copy
@@ -109,6 +110,7 @@ class FieldStorage:
 
         # 1st pass - Get operators and values.   
         for key in keys:
+
             # due differences in the way browsers use escape characters
             # (or don't) in the text they submit, we first retrieve the
             # value and then unquote the key (TR 2739)
@@ -166,10 +168,18 @@ class FieldStorage:
                         fields[fieldName]['val'].append(
                             miniItem.value)
                 elif type(item.value) is StringType:
-                    item.value = regsub.gsub(', ', ',',
-                        item.value)
-                    fields[fieldName]['val'] = \
-                        string.split(item.value, ',')
+                    #Double-Quoted strings should not be split
+                    if (item.value[:1] == "\"" and item.value[-1:] == "\""):
+                        tmpItem = item.value[1:-1]
+                        fields[fieldName]['val'] = [tmpItem]
+                    elif (item.value[-1:] == ","): #strip the comma
+                        tmpItem = item.value[:-1]
+                        fields[fieldName]['val'] = [tmpItem]
+                    else:
+                        item.value = regsub.gsub(', ', ',',
+                            item.value)
+                        fields[fieldName]['val'] = \
+                            string.split(item.value, ',')
                 else: # It's an instance
                     fields[fieldName]['val'] = \
                         item.value
@@ -181,7 +191,7 @@ class FieldStorage:
                             miniItem.value)
                 else: # It's an instance
                     fields[fieldName]['val'] = [item.value]
-    
+
         # Now that the initial construction is taken care of, save the 
         # operators and values before they are made into SQL.
         displayFields = copy.deepcopy(fields)
