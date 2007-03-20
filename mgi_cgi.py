@@ -114,9 +114,9 @@ class FieldStorage:
             # due differences in the way browsers use escape characters
             # (or don't) in the text they submit, we first retrieve the
             # value and then unquote the key (TR 2739)
-
             item = form[key]
             key = urllib.unquote(key)
+
             # determine the type of the argument.  If none specified,
             # use the default
             if string.find(key, delim) != -1:
@@ -168,12 +168,15 @@ class FieldStorage:
                         fields[fieldName]['val'].append(
                             miniItem.value)
                 elif type(item.value) is StringType:
+                    tmpItem = item.value;
+                    tmpItem = tmpItem.strip()
+               
                     #Double-Quoted strings should not be split
-                    if (item.value[:1] == "\"" and item.value[-1:] == "\""):
-                        tmpItem = item.value[1:-1]
+                    if (tmpItem[:1] == "\"" and tmpItem[-1:] == "\""):
+                        tmpItem = tmpItem[1:-1]
                         fields[fieldName]['val'] = [tmpItem]
-                    elif (item.value[-1:] == ","): #strip the comma
-                        tmpItem = item.value[:-1]
+                    elif (tmpItem[-1:] == ","): #strip any trailing comma
+                        tmpItem = tmpItem[:-1]
                         fields[fieldName]['val'] = [tmpItem]
                     else:
                         item.value = regsub.gsub(', ', ',',
