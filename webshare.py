@@ -4,6 +4,7 @@
 
 import string
 import rcdlib
+import urllib
 
 ###-------------------------------###
 ###--- public global variables ---###
@@ -35,6 +36,17 @@ def hasSpace (
 	# Throws: nothing
 
 	return string.find(s, ' ') != -1
+
+def getConfig (url):
+	# Purpose: Take the url passed to it, and return a string representing
+	#  what that URL returned.
+	# Returns: A string of the url's contents
+	# Assumes: A valid url being passed to it
+	# Effect: Nothing
+	# Throws: nothing
+
+        configCGI =  urllib.urlopen(url)
+        return configCGI.readlines()
 
 ###----------------------###
 ###--- public classes ---###
