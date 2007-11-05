@@ -20,6 +20,8 @@ class Template:
 	helpLink = ""
 	headerText = "Mouse Genome Informatics"
 	headerSubText = ""
+	inputFormUrl = ""
+	inputFormParameters = {}
 	body = []
 	contentType = 'Content-type: text/html\n\n'
 	javaScript_url = []
@@ -153,6 +155,39 @@ class Template:
 	def setHeaderBarSubText(self, text):
 		self.headerSubText = text	
 
+##	Set the header bar 'Your Input' form parameters
+		
+	def getHeaderBarInputFormParameters(self):
+		return self.inputFormParameters
+	
+	def getHeaderBarInputForm(self):
+		form = '''<div style="float:right;">
+				<FORM NAME="header">
+					<INPUT TYPE=button VALUE="Your Input Welcome" NAME="yourInput"
+					onClick=\'window.open("%sfeedback/feedback_form.cgi?%s")\'>
+				</FORM>
+			</div>'''
+		if len(self.inputFormParameters) > 0:
+			return form % (self.inputFormUrl,
+				'&'.join(["%s=%s" % (k, v) for k, v in self.inputFormParameters.items()]))
+		else:
+			return ''
+	
+	def getHeaderBarInputFormUrl(self):
+		return self.inputFormUrl
+		
+	def setHeaderBarInputFormUrl(self, url):
+		if type(url) == StringType:
+			self.inputFormUrl = url
+	
+	def setHeaderBarInputFormParameters(self, parameters):
+		if type(parameters) == DictionaryType:
+			self.inputFormParameters = parameters	
+		
+	def appendHeaderBarInputFormParameters(self, parameters):
+		if type(parameters) == DictionaryType:
+			self.inputFormParameters.update(parameters)	
+		
 ##	Template sections.  This pulls in our mgi standard templates.
 
 	def getTemplateHead(self):
@@ -190,6 +225,7 @@ class Template:
 			head = '<div id="titleBarWrapper" userdoc="' + self.getHelpLink() +'">\n'	
 		else:
 			head = '<div id="titleBarWrapper">\n'
+		head = head + self.getHeaderBarInputForm()
 		head = head + '<span class="titleBarMainTitle">'
 		head = head + self.getHeaderBarMainText()
 		head = head + '</span><br>\n'
