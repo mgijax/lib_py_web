@@ -1,3 +1,31 @@
+#
+# Program: template.py
+#
+# Original Author: mhall
+#
+# Purpose: Supply a python cgi script with a standard way to interact with 
+#	   the templates.
+#
+# Requirements Satisfied by This Program: Standard Templates for TR8087
+#
+# Usage:
+#       template_name = new template.Template(pathToTemplateDirectory)
+#
+# Envvars: None
+#
+# Inputs:  Supply a path to the template directories, or assume the default.
+#	   which is test/
+#
+# Outputs: html, which varies depending on method invokation.
+#
+# Exit Codes: None
+#
+# Assumes: Template objects have remained named such as set up in the constants.
+#
+# Bugs: None
+
+
+
 import sys
 from types import *
 
@@ -5,6 +33,11 @@ TEMPLATEHEAD = 'templateHead.html'
 TEMPLATEBODYSTART = 'templateBodyStart.html'
 TEMPLATEBODYSTOP = 'templateBodyStop.html'
 
+# Purpose: fetches a file, that resides at the supplied path
+# Returns: String representation of the file in question.
+# Assumes: nothing
+# Effects: none
+# Throws: nothing
 
 def getFile (path):
 	doc = open(path, "r")
@@ -13,6 +46,13 @@ def getFile (path):
 		results = results + line
 	doc.close()
 	return results
+
+# Purpose: The Standard template object
+# Returns: Varies with method invokation
+# Assumes: Templates have remained named the same as defined in this programs constants.
+# Effects: Constructs, and returns a template object, on demand.
+# Throws: nothing
+
 
 class Template:
 		
@@ -67,12 +107,6 @@ class Template:
 			self.body = self.body + [Text]
 		else:
 			self.body = self.body + Text	
-
-## 	In the rare case that you dont want the Content Type tag printing out
-##	invoke this method.
-
-	def noContentType(self):
-		self.printType = 0
 
 ##	The Custom CSS Sections (This Needs to be finished up!)
 	
@@ -199,8 +233,7 @@ class Template:
 	def getTemplateBodyStop(self):
                 return getFile(self.path+TEMPLATEBODYSTOP)
                 
-##	Return JUST the title, javaScript, Css, templateHead and TemplateBodyStart                
-## 	The Javascript and CSS part has yet to be implemented.
+##	Return JUST the title, javaScript, Css, templateHead and TemplateBodyStart 
 
 	def getNavigation(self):
 		text = self.getContentType()
@@ -242,17 +275,6 @@ class Template:
 		head = self.getNavigation()
 		head = head + self.getHeaderBar()
 		return head
-
-##	This method needs to be removed, but its being kept in for backwards compatability atm
-##	until I can retrofit my old code.
-
-	def getFullHeader(self):
-		head = self.getNavigation()
-        	head = head + '<h2 id="titleBar" '
-        	if self.helpLink != '':
-               		head = head + ' userdoc="' + self.getHelpLink() + '"'
-        	head = head + '> ' + self.getHeaderBarMainText() + '</h2>'
-        	return head
 
 ##	Return the whole document
 
