@@ -195,13 +195,13 @@ class Template:
 		return self.inputFormParameters
 	
 	def getHeaderBarInputForm(self):
-		form = '''<div style="float:right;">
+		form = '''<div class="yourInputButton">
 				<FORM NAME="header">
 					<INPUT TYPE=button VALUE="Your Input Welcome" NAME="yourInput"
 					onClick=\'window.open("%sfeedback/feedback_form.cgi?%s")\'>
 				</FORM>
 			</div>'''
-		if len(self.inputFormParameters) > 0:
+		if len(self.inputFormParameters) > 0 and self.inputFormUrl != '':
 			return form % (self.inputFormUrl,
 				'&'.join(["%s=%s" % (k, v) for k, v in self.inputFormParameters.items()]))
 		else:
