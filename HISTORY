@@ -1,8 +1,12 @@
-TAG: tr8087
-DATE: 8/30/2007
-STAFF: mhall
-CHANGES:
-1) Adding in Global Configuration Ability
+TAG: lib_py_web-4-0-0-1
+DATE: 12/24/07
+STAFF: pf
+CHANGES: merging tr8087 to trunk
+
+TAG: lib_py_web-tr8087-x (BP,5)
+DATE: 6/30/2007 -> 12/20/07
+STAFF: pf
+CHANGES: MGI 4.0 branch and branch point tags
 
 TAG: lib_py_web-3-5-0-2
 DATE: 8/15/2006
