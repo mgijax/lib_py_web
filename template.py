@@ -151,7 +151,7 @@ class Template:
 		
 	def setJavaScript(self, script):
 		if type(script) == StringType:
-			self.javaScipt = [script]
+			self.javaScript = [script]
 		else:
 			self.javaScript = script	
 		
@@ -160,7 +160,7 @@ class Template:
 		
 	def appendJavaScript(self, script):
 		if type(script) == StringType:
-			self.javaScipt = [script]
+			self.javaScript = [script]
 		else:
 			self.javaScript = script
 
