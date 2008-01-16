@@ -1,7 +1,7 @@
-TAG: lib_py_web-4-0-0-1
-DATE: 12/24/07
+TAG: lib_py_web-4-0-0-x (1->2)
+DATE: 1/16/08
 STAFF: pf
-CHANGES: merging tr8087 to trunk
+CHANGES: MGI 4.0 alpha/beta tags
 
 TAG: lib_py_web-tr8087-x (BP,5)
 DATE: 6/30/2007 -> 12/20/07
