@@ -196,11 +196,14 @@ class Template:
 	
 	def getHeaderBarInputForm(self):
 		form = '''<div class="yourInputButton">
-				<FORM NAME="header">
-					<INPUT TYPE=button VALUE="Your Input Welcome" NAME="yourInput"
-					onClick=\'window.open("%sfeedback/feedback_form.cgi?%s")\'>
-				</FORM>
-			</div>'''
+			<FORM NAME="YourInputForm">
+				<INPUT TYPE=button class="searchToolButton" VALUE="Your Input Welcome" NAME="yourInputButton"
+				onClick='window.open("%sfeedback/feedback_form.cgi?%s")'
+				onMouseOver="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 3000);" 
+				onMouseOut="nd();">
+			</FORM>
+		</div>'''
+			
 		if len(self.inputFormParameters) > 0 and self.inputFormUrl != '':
 			return form % (self.inputFormUrl,
 				'&'.join(["%s=%s" % (k, v) for k, v in self.inputFormParameters.items()]))
