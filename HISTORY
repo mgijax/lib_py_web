@@ -1,3 +1,8 @@
+TAG: lib_py_web-4-3-1-1
+DATE: 10/13/2009 
+STAFF: mjsb
+CHANGES: added basic cookie support to template.py
+
 TAG: lib_py_web-tr9592-BP 
 DATE: 4/22/2009 
 STAFF: mhall
