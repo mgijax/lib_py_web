@@ -63,7 +63,8 @@ class Template:
 	inputFormUrl = ""
 	inputFormParameters = {}
 	body = []
-	contentType = 'Content-type: text/html\n\n'
+	contentType = 'Content-type: text/html\n'
+	cookies = ''
 	javaScript_url = []
 	javaScript = []
 	css = []
@@ -80,6 +81,14 @@ class Template:
 	
 	def setContentType(self, type):
 		self.contentType = type
+
+##	Cookie Section
+	
+	def getCookies(self):
+		return self.cookies + '\n'
+	
+	def setCookies(self, cookies):
+		self.cookies = cookies
 
 ##	Page Title Section (This is what appears in the title bar)
 	
@@ -240,6 +249,7 @@ class Template:
 
 	def getNavigation(self):
 		text = self.getContentType()
+		text = text + self.getCookies() + '\n'
 		text = text + self.getTemplateHead()
 		text = text + self.getTitle()
 		if len(self.css) != 0:
