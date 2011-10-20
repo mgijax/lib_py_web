@@ -12,7 +12,7 @@
 
 import httplib		# standard Python libraries
 import urllib
-import regex
+import re
 import socket
 
 import AlarmClock	# MGI libraries
@@ -23,7 +23,7 @@ error = 'httpReader.error'	# exception to be raised by this module
 DEFAULT_TIMEOUT = 120		# two minutes is the default for timing out
 
 # locate server and request in URL
-server_re = regex.compile ('[a-zA-Z]+://\([^/]+\)\(.*\)')  
+server_re = re.compile ('[a-zA-Z]+://([^/]+)(.*)')  
 
 ###--- Public Function ---###
 
@@ -121,10 +121,11 @@ class httpReader:
 		#	the 'baseURL'
 		global server_re
 
-		if server_re.match (baseURL) == -1:
+		match = server_re.match (baseURL)
+		if not match:
 			raise error, 'Cannot find server and request in the given URL'
-		self.server = server_re.group(1)
-		self.request = server_re.group(2)
+		self.server = match.group(1)
+		self.request = match.group(2)
 		self.baseURL = baseURL
 		return
 
