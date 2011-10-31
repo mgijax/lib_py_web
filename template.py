@@ -29,7 +29,7 @@
 import sys
 from types import *
 
-TEMPLATEHEAD = 'templateHead.html'
+TEMPLATEHEAD = 'templateHeadNoReset.html'
 TEMPLATEBODYSTART = 'templateBodyStart.html'
 TEMPLATEBODYSTOP = 'templateBodyStop.html'
 
