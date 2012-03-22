@@ -1,11 +1,16 @@
-TAG: lib_py_web-tr9993-x 
-DATE: 10/31/2011 
+TAG: lib_py_web-5-0-0-1
+DATE: 3/22/2012 
+STAFF: pf
+CHANGES: 5.0 release tag
+
+TAG: lib_py_web-tr9993-x (1,2,3)
+DATE: 10/31/2011 -> 2/22/12
 STAFF: pf
 CHANGES: Branch point and dev tags for tr9993
 
 TAG: lib_py_web-4-3-1-1
 DATE: 10/13/2009 
-STAFF: mjsb
+STAFF: jsb
 CHANGES: added basic cookie support to template.py
 
 TAG: lib_py_web-tr9592-BP 
