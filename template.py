@@ -33,6 +33,17 @@ TEMPLATEHEAD = 'templateHeadNoReset.html'
 TEMPLATEBODYSTART = 'templateBodyStart.html'
 TEMPLATEBODYSTOP = 'templateBodyStop.html'
 
+IS_GXD_PAGE = False
+GXD_LOGO = None
+GXD_MINIHOME_URL = None
+
+def setGxd(logoTag, minihomeUrl):
+	global IS_GXD_PAGE, GXD_LOGO, GXD_MINIHOME_URL
+	IS_GXD_PAGE = True
+	GXD_LOGO = logoTag
+	GXD_MINIHOME_URL = minihomeUrl
+	return
+
 # Purpose: fetches a file, that resides at the supplied path
 # Returns: String representation of the file in question.
 # Assumes: nothing
@@ -266,7 +277,39 @@ class Template:
 
 ##	Return JUSt the headerbar.  This is used in the construction of the next method mostly.
 	
+	def getGxdHeaderBar(self):
+		global IS_GXD_PAGE, GXD_LOGO, GXD_MINIHOME_URL
+
+		extra = ''
+		if self.headerSubText:
+			extra = ' style="padding-top:0px"'
+
+		if self.helpLink != '':
+			head = "<div id='titleBarWrapperGxd' userdoc='" + self.getHelpLink() +"'>\n"
+		else:
+			head = '<div id="titleBarWrapperGxd">\n'
+		head = head + '<div id="gxdLogoDiv">'
+		head = head + '<a href="' + GXD_MINIHOME_URL + '">' \
+				+ GXD_LOGO + '</a></div>'
+		head = head + '<div id="gxdCenteredTitle"' + extra + '>'
+		head = head + '<span class="titleBarMainTitleGxd" ' \
+			+ 'style="display:inline-block; margin-top: 20px;">'
+		head = head + self.getHeaderBarMainText()
+		head = head + '</span><br>\n'
+		if self.headerSubText != '':
+			head = head + self.getHeaderBarSubText()
+		head = head + '</div>\n'
+		head = head + '<div id="headerRightGxd">'
+		head = head + '</div>\n'
+		head = head + '</div>\n'
+		return head
+
 	def getHeaderBar(self):
+		global IS_GXD_PAGE
+
+		if IS_GXD_PAGE:
+			return self.getGxdHeaderBar()
+
 		if self.helpLink != '':
 			head = '<div id="titleBarWrapper" userdoc="' + self.getHelpLink() +'">\n'	
 		else:
