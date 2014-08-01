@@ -1,0 +1,47 @@
+diff --git a/mgi_cgi.py b/mgi_cgi.py
+index 7f9e40a..1b69525 100644
+--- a/mgi_cgi.py
++++ b/mgi_cgi.py
+@@ -26,7 +26,7 @@ import sys
+ import urllib
+ import string
+ import copy
+-import regsub
++import re
+ from types import *
+ 
+ 
+@@ -179,7 +179,7 @@ class FieldStorage:
+                         tmpItem = tmpItem[:-1]
+                         fields[fieldName]['val'] = [tmpItem]
+                     else:
+-                        item.value = regsub.gsub(', ', ',',
++                        item.value = re.sub(', ', ',',
+                             item.value)
+                         fields[fieldName]['val'] = \
+                             string.split(item.value, ',')
+diff --git a/mgi_html.py b/mgi_html.py
+index f571053..eacaaa2 100644
+--- a/mgi_html.py
++++ b/mgi_html.py
+@@ -7,8 +7,7 @@ import os
+ import string
+ import types
+ import time
+-import regex
+-import regsub
++import re
+ import cgi
+ import urllib
+ import random
+@@ -362,8 +361,8 @@ def stripHtmlTags (
+ 	# then do so before we strip out all the tags.
+ 
+ 	if subLF:
+-		s = regsub.gsub ('<[bB][rR]>', '\n', s)
+-		s = regsub.gsub ('<[pP]>', '\n', s)
++		s = re.sub ('<[bB][rR]>', '\n', s)
++		s = re.sub ('<[pP]>', '\n', s)
+ 
+ 	# finally, strip the HTML tags, leaving in place any delimiters in
+ 	# mid-tag.  (This could happen if a tag was split across multiple
