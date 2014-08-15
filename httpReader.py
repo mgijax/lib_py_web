@@ -104,6 +104,7 @@ class httpReader:
 		self.baseURL = ''
 		self.request = ''
 		self.server = ''
+		self.code = None
 		self.timeout = timeout		# handle the parameters
 		self.setBaseURL (baseURL)
 		self.setParms (parms)
@@ -299,6 +300,8 @@ class httpReader:
 			error = 'Unexpected error'
 
 		AlarmClock.clear ()
+
+		self.code = code
 
 		return page, error
 
