@@ -247,6 +247,7 @@ class httpReader:
 		# specified GET parameters:
 
 		request = self.baseURL
+		code = None
 		if self.parms:
 			request = request + '?'
 			for name in self.parms.keys():
