@@ -257,8 +257,6 @@ class httpReader:
 		try:
 			AlarmClock.set (self.getTimeout())	# set timeout
 
-			AlarmClock.set (self.getTimeout())      # set timeout
-
 			# open the connection and send the request
 
 			conn = httplib.HTTPConnection (self.server)
