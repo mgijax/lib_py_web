@@ -257,31 +257,16 @@ class httpReader:
 		try:
 			AlarmClock.set (self.getTimeout())	# set timeout
 
+			AlarmClock.set (self.getTimeout())      # set timeout
+
 			# open the connection and send the request
 
-			conn = httplib.HTTP (self.server)
-			conn.putrequest ('GET', self.request)
-			conn.putheader ('User-Agent', 'Mozilla')
-			conn.endheaders()
+			conn = httplib.HTTPConnection (self.server)
+			conn.request ("GET", self.request)
 
 			# get the reply and read it into a list of strings
-
-			(code, message, headers) = conn.getreply()
-
-
-			if (message == 'Moved'):
-				movedTo = headers.getheader('Location')
-				del conn
-				conn = httplib.HTTP (self.server)
-				conn.putrequest ('GET', movedTo)
-				conn.putheader ('User-Agent', 'Mozilla')
-				conn.endheaders()
-
-				(code, message, headers) = conn.getreply()
-
-			fp = conn.getfile()
-			page = fp.readlines()
-			fp.close()
+			rs = conn.getresponse()
+			page = rs.read().split("\n")
 			error = None
 
 		except AlarmClock.timeUp:	# the connection timed out,
