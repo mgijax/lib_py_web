@@ -23,7 +23,7 @@
  
 import cgi
 import sys
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import string
 import copy
 import regsub
@@ -41,19 +41,19 @@ def processDisplayFields(displayFields,nots) :
     # Returns: a modified version of displayFields
     # Assumes: nothing
     # Effects: nothing
-    for key in displayFields.keys():
+    for key in list(displayFields.keys()):
         if displayFields[key]['val'] is None:
             if displayFields[key]['op'] == 'is null':
                 displayFields[key]['val'] = 'null'
                 displayFields[key]['op'] = 'is'
-	    elif displayFields[key]['op'] == 'is not null':
-		displayFields[key]['val'] = 'not null'
-		displayFields[key]['op'] = 'is'
+            elif displayFields[key]['op'] == 'is not null':
+                displayFields[key]['val'] = 'not null'
+                displayFields[key]['op'] = 'is'
             else:
                 del displayFields[key]  
     # Modify operators if NOT has been checked.
     for key in nots:
-        if displayFields.has_key(key):
+        if key in displayFields:
             if displayFields[key]['op'] == '=':
                 displayFields[key]['op'] = '!='
             elif displayFields[key]['op'] == 'is':
@@ -85,7 +85,7 @@ class Field:
             rep = '<B>'+str(self.name) + ':</B> '
             if self.op != None and self.value != None:
                 op = self.op
-                if self.op in self.opList.keys() :
+                if self.op in list(self.opList.keys()) :
                     op = self.opList[self.op]
                 rep = rep + str(op) + ' <i>' + str(self.value) + '</i>'
         return rep
@@ -106,7 +106,7 @@ class FieldStorage:
         self.cgiFieldStorage = form
 
         nots = []
-        keys = form.keys()
+        keys = list(form.keys())
 
         # 1st pass - Get operators and values.   
         for key in keys:
@@ -115,18 +115,18 @@ class FieldStorage:
             # (or don't) in the text they submit, we first retrieve the
             # value and then unquote the key (TR 2739)
             item = form[key]
-            key = urllib.unquote(key)
+            key = urllib.parse.unquote(key)
 
             # determine the type of the argument.  If none specified,
             # use the default
             if string.find(key, delim) != -1:
                 fieldType = string.split(key, delim)[0]
                 fieldName = string.split(key, delim)[1]
-            elif fieldTypes.has_key(key):
+            elif key in fieldTypes:
                 fieldType = fieldTypes[key]
                 fieldName = key
             else:
-                raise KeyError, key
+                raise KeyError(key)
 
             if fieldType == 'op':
                 fields[fieldName]['op'] = item.value
@@ -142,10 +142,10 @@ class FieldStorage:
                     fields[fieldName]['val'] = \
                         string.atof(item.value)
                 except:
-                    raise error, 'Unable to convert the ' \
+                    raise error('Unable to convert the ' \
                         + 'value "' + str(item.value) \
                         + '" to a number for field "' \
-                        + fieldName + '".'
+                        + fieldName + '".')
             elif fieldType == 'int_list':
                 if type(item) is ListType:
                     fields[fieldName]['val'] = []
@@ -202,12 +202,12 @@ class FieldStorage:
         self.displayFields = processDisplayFields(displayFields,nots)
       
         # 2nd pass - Modify values as necessary.  Delete field if None.
-        for key in fields.keys():
+        for key in list(fields.keys()):
             if fields[key]['val'] is None:
                 if fields[key]['op'] == 'is null':
                     fields[key]['val'] = 'null'
                     fields[key]['op'] = 'is'
-		elif fields[key]['op'] == 'is not null':
+                elif fields[key]['op'] == 'is not null':
                     fields[key]['val'] = 'null'
                     fields[key]['op'] = 'is not'
                 else:
@@ -245,7 +245,7 @@ class FieldStorage:
 
         # Modify operators if NOT has been checked.
         for key in nots:
-            if fields.has_key(key):
+            if key in fields:
                 if fields[key]['op'] == '=':
                     fields[key]['op'] = '!='
                 elif fields[key]['op'] == 'is':
@@ -286,16 +286,16 @@ class FieldStorage:
         return
 
     def keys(self):
-        return self.fields.keys()
+        return list(self.fields.keys())
 
 
     def has_key(self, key):
-        return self.fields.has_key(key)
+        return key in self.fields
 
 
     def __repr__(self):
         s = '<dl>\n'
-        keys = self.fields.keys()
+        keys = list(self.fields.keys())
         keys.sort()
         for key in keys:
             s = s + '<dt>' + key + '\n'

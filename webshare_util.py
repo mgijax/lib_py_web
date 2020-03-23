@@ -16,7 +16,7 @@ def saveWebshare(filePath, baseURL) :
     try:
         f = open(filePath, "w")
     except:
-        print "Error opening data/webshare.rcd file"
+        print("Error opening data/webshare.rcd file")
         sys.exit(1)
 
     f.write('# Note: This file is machine-generated, do not edit!\n')
@@ -26,27 +26,27 @@ def saveWebshare(filePath, baseURL) :
     try:
         lines, errors = httpReader.getURL (url)
         if errors:
-            print "Errors occurred when reading from webshare product:"
+            print("Errors occurred when reading from webshare product:")
             for error in errors:
-                print "    " + error
+                print("    " + error)
             raise IOError
 
         # HTTP headers come down with the response, so we need to skip down
         # until we get past the blank line which separates the headers from
         # the body
 
-        lines = map (string.strip, lines)
+        lines = list(map (string.strip, lines))
         if '' in lines:
             pos = lines.index ('')
             lines = lines[pos+1:]
 
         for line in lines:
             f.write(line + '\n')
-        print "Updated %s file" % filePath
+        print("Updated %s file" % filePath)
         f.close()
 
     except:
-        print "Error generating data/webshare.rcd file; please try again."
+        print("Error generating data/webshare.rcd file; please try again.")
         f.close()
         sys.exit(1)
 

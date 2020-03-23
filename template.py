@@ -4,7 +4,7 @@
 # Original Author: mhall
 #
 # Purpose: Supply a python cgi script with a standard way to interact with 
-#	   the templates.
+#          the templates.
 #
 # Requirements Satisfied by This Program: Standard Templates for TR8087
 #
@@ -14,7 +14,7 @@
 # Envvars: None
 #
 # Inputs:  Supply a path to the template directories, or assume the default.
-#	   which is test/
+#          which is test/
 #
 # Outputs: html, which varies depending on method invokation.
 #
@@ -38,11 +38,11 @@ GXD_LOGO = None
 GXD_MINIHOME_URL = None
 
 def setGxd(logoTag, minihomeUrl):
-	global IS_GXD_PAGE, GXD_LOGO, GXD_MINIHOME_URL
-	IS_GXD_PAGE = True
-	GXD_LOGO = logoTag
-	GXD_MINIHOME_URL = minihomeUrl
-	return
+        global IS_GXD_PAGE, GXD_LOGO, GXD_MINIHOME_URL
+        IS_GXD_PAGE = True
+        GXD_LOGO = logoTag
+        GXD_MINIHOME_URL = minihomeUrl
+        return
 
 # Purpose: fetches a file, that resides at the supplied path
 # Returns: String representation of the file in question.
@@ -51,12 +51,12 @@ def setGxd(logoTag, minihomeUrl):
 # Throws: nothing
 
 def getFile (path):
-	doc = open(path, "r")
-	results = ''
-	for line in doc:
-		results = results + line
-	doc.close()
-	return results
+        doc = open(path, "r")
+        results = ''
+        for line in doc:
+                results = results + line
+        doc.close()
+        return results
 
 # Purpose: The Standard template object
 # Returns: Varies with method invokation
@@ -66,288 +66,288 @@ def getFile (path):
 
 
 class Template:
-		
-	title = "<TITLE> Mouse Genome Informatics </TITLE>"
-	helpLink = ""
-	headerText = "Mouse Genome Informatics"
-	headerSubText = ""
-	inputFormUrl = ""
-	inputFormParameters = {}
-	body = []
-	contentType = 'Content-type: text/html\n'
-	cookies = ''
-	javaScript_url = []
-	javaScript = []
-	css = []
-	printType = 1
+                
+        title = "<TITLE> Mouse Genome Informatics </TITLE>"
+        helpLink = ""
+        headerText = "Mouse Genome Informatics"
+        headerSubText = ""
+        inputFormUrl = ""
+        inputFormParameters = {}
+        body = []
+        contentType = 'Content-type: text/html\n'
+        cookies = ''
+        javaScript_url = []
+        javaScript = []
+        css = []
+        printType = 1
 
-	def __init__ (self, path = 'test/'):
-		self.path = path
-		return
-		
-##	Content Type Section (This is Content-type: text/html by default)
-	
-	def getContentType(self):
-		return self.contentType
-	
-	def setContentType(self, type):
-		self.contentType = type
+        def __init__ (self, path = 'test/'):
+                self.path = path
+                return
+                
+##      Content Type Section (This is Content-type: text/html by default)
+        
+        def getContentType(self):
+                return self.contentType
+        
+        def setContentType(self, type):
+                self.contentType = type
 
-##	Cookie Section
-	
-	def getCookies(self):
-		return self.cookies + '\n'
-	
-	def setCookies(self, cookies):
-		self.cookies = cookies
+##      Cookie Section
+        
+        def getCookies(self):
+                return self.cookies + '\n'
+        
+        def setCookies(self, cookies):
+                self.cookies = cookies
 
-##	Page Title Section (This is what appears in the title bar)
-	
-	def getTitle(self):
-		return self.title
-	
-	def setTitle(self, Title):
-		self.title = '<TITLE> ' + Title + '</TITLE>'
-
-
-##	Body Section
-		
-	def getBody(self):
-		return self.body
-		
-	
-	def setBody(self, Text):
-		if type(Text) == StringType:
-			self.body = [Text]
-		else:
-			self.body = Text
-	
-	def appendBody(self, Text):
-		if type(Text) == StringType:
-			self.body = self.body + [Text]
-		else:
-			self.body = self.body + Text	
-
-##	The Custom CSS Sections (This Needs to be finished up!)
-	
-	def setCSS(self, url):
-		if type(url) == StringType:
-			self.css = ['<link rel="stylesheet" type="text/css" href="'+ url +'"/>']
-		else:
-			for eachUrl in url:
-				self.css = self.css + ['<link rel="stylesheet" type="text/css" href="'+ eachUrl +'"/>']
+##      Page Title Section (This is what appears in the title bar)
+        
+        def getTitle(self):
+                return self.title
+        
+        def setTitle(self, Title):
+                self.title = '<TITLE> ' + Title + '</TITLE>'
 
 
-	def appendCSS(self, url):
-		if type(url) == StringType:
-			self.css = self.css + ['<link rel="stylesheet" type="text/css" href="'+ url +'"/>']
-		else:
-			for eachUrl in url:
-				self.css = self.css + ['<link rel="stylesheet" type="text/css" href="'+ eachUrl +'"/>']	
-			
-	def getCSS(self):
-		return self.css
-		
-##	The Custom Javascript Include section. (This needs to be finished up!)
-		
-	def setJavaScriptInclude(self, url):
-		if type(url) == StringType:
-			self.javaScript_url = ['<script type="text/javascript" src="'+ url +'"></script>']
-		else:
-			for eachUrl in url:
-				self.javaScript_url = self.javaScript_url['<script type="text/javascript" src="'+ eachUrl +'"></script>']
-		
-	def getJavaScriptInclude(self):
-		return self.javaScript_url
-		
-	def appendJavaScriptInclude(self, url):
-		if type(url) == StringType:
-			self.javaScript_url = self.javaScript_url['<script type="text/javascript" src="'+ url +'"></script>']
-		else:
-			for eachUrl in url:
-				self.javaScript_url = self.javaScript_url + ['<script type="text/javascript" src="'+ eachUrl +'"></script>']		
+##      Body Section
+                
+        def getBody(self):
+                return self.body
+                
+        
+        def setBody(self, Text):
+                if type(Text) == StringType:
+                        self.body = [Text]
+                else:
+                        self.body = Text
+        
+        def appendBody(self, Text):
+                if type(Text) == StringType:
+                        self.body = self.body + [Text]
+                else:
+                        self.body = self.body + Text    
 
-##	The Custom Script section. (This needs to be finished up!)
-		
-	def setJavaScript(self, script):
-		if type(script) == StringType:
-			self.javaScript = [script]
-		else:
-			self.javaScript = script	
-		
-	def getJavaScript(self):
-		return self.javaScript
-		
-	def appendJavaScript(self, script):
-		if type(script) == StringType:
-			self.javaScript = [script]
-		else:
-			self.javaScript = script
+##      The Custom CSS Sections (This Needs to be finished up!)
+        
+        def setCSS(self, url):
+                if type(url) == StringType:
+                        self.css = ['<link rel="stylesheet" type="text/css" href="'+ url +'"/>']
+                else:
+                        for eachUrl in url:
+                                self.css = self.css + ['<link rel="stylesheet" type="text/css" href="'+ eachUrl +'"/>']
 
-##	This is for the help link, by setting this a div section will appear which will then generate an image on the page
-##	that leads to the userdocs.
-		
-	def getHelpLink(self):
-		return self.helpLink
 
-	def setHelpLink(self, url):
-		self.helpLink = url
+        def appendCSS(self, url):
+                if type(url) == StringType:
+                        self.css = self.css + ['<link rel="stylesheet" type="text/css" href="'+ url +'"/>']
+                else:
+                        for eachUrl in url:
+                                self.css = self.css + ['<link rel="stylesheet" type="text/css" href="'+ eachUrl +'"/>'] 
+                        
+        def getCSS(self):
+                return self.css
+                
+##      The Custom Javascript Include section. (This needs to be finished up!)
+                
+        def setJavaScriptInclude(self, url):
+                if type(url) == StringType:
+                        self.javaScript_url = ['<script type="text/javascript" src="'+ url +'"></script>']
+                else:
+                        for eachUrl in url:
+                                self.javaScript_url = self.javaScript_url['<script type="text/javascript" src="'+ eachUrl +'"></script>']
+                
+        def getJavaScriptInclude(self):
+                return self.javaScript_url
+                
+        def appendJavaScriptInclude(self, url):
+                if type(url) == StringType:
+                        self.javaScript_url = self.javaScript_url['<script type="text/javascript" src="'+ url +'"></script>']
+                else:
+                        for eachUrl in url:
+                                self.javaScript_url = self.javaScript_url + ['<script type="text/javascript" src="'+ eachUrl +'"></script>']            
 
-##	Set the headerbards main text section (The first span atm)
+##      The Custom Script section. (This needs to be finished up!)
+                
+        def setJavaScript(self, script):
+                if type(script) == StringType:
+                        self.javaScript = [script]
+                else:
+                        self.javaScript = script        
+                
+        def getJavaScript(self):
+                return self.javaScript
+                
+        def appendJavaScript(self, script):
+                if type(script) == StringType:
+                        self.javaScript = [script]
+                else:
+                        self.javaScript = script
 
-	def getHeaderBarMainText(self):
-		return self.headerText
-	
-	def setHeaderBarMainText(self, text):
-		self.headerText = text
+##      This is for the help link, by setting this a div section will appear which will then generate an image on the page
+##      that leads to the userdocs.
+                
+        def getHelpLink(self):
+                return self.helpLink
 
-##	Set the subheader text (The second span atm)
-		
-	def getHeaderBarSubText(self):
-		return self.headerSubText
-	
-	def setHeaderBarSubText(self, text):
-		self.headerSubText = text	
+        def setHelpLink(self, url):
+                self.helpLink = url
 
-##	Set the header bar 'Your Input' form parameters
-		
-	def getHeaderBarInputFormParameters(self):
-		return self.inputFormParameters
-	
-	def getHeaderBarInputForm(self):
-		form = '''<div class="yourInputButton">
-			<FORM NAME="YourInputForm">
-				<INPUT TYPE=button class="searchToolButton" VALUE="Your Input Welcome" NAME="yourInputButton"
-				onClick='window.open("%sfeedback/feedback_form.cgi?%s")'
-				onMouseOver="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" 
-				onMouseOut="nd();">
-			</FORM>
-		</div>'''
-			
-		if len(self.inputFormParameters) > 0 and self.inputFormUrl != '':
-			return form % (self.inputFormUrl,
-				'&'.join(["%s=%s" % (k, v) for k, v in self.inputFormParameters.items()]))
-		else:
-			return ''
-	
-	def getHeaderBarInputFormUrl(self):
-		return self.inputFormUrl
-		
-	def setHeaderBarInputFormUrl(self, url):
-		if type(url) == StringType:
-			self.inputFormUrl = url
-	
-	def setHeaderBarInputFormParameters(self, parameters):
-		if type(parameters) == DictionaryType:
-			self.inputFormParameters = parameters	
-		
-	def appendHeaderBarInputFormParameters(self, parameters):
-		if type(parameters) == DictionaryType:
-			self.inputFormParameters.update(parameters)	
-		
-##	Template sections.  This pulls in our mgi standard templates.
+##      Set the headerbards main text section (The first span atm)
 
-	def getTemplateHead(self):
-		return getFile(self.path+TEMPLATEHEAD)
+        def getHeaderBarMainText(self):
+                return self.headerText
+        
+        def setHeaderBarMainText(self, text):
+                self.headerText = text
 
-	def getTemplateBodyStart(self):
+##      Set the subheader text (The second span atm)
+                
+        def getHeaderBarSubText(self):
+                return self.headerSubText
+        
+        def setHeaderBarSubText(self, text):
+                self.headerSubText = text       
+
+##      Set the header bar 'Your Input' form parameters
+                
+        def getHeaderBarInputFormParameters(self):
+                return self.inputFormParameters
+        
+        def getHeaderBarInputForm(self):
+                form = '''<div class="yourInputButton">
+                        <FORM NAME="YourInputForm">
+                                <INPUT TYPE=button class="searchToolButton" VALUE="Your Input Welcome" NAME="yourInputButton"
+                                onClick='window.open("%sfeedback/feedback_form.cgi?%s")'
+                                onMouseOver="return overlib('We welcome your corrections and new data. Click here to contact us.', LEFT, WIDTH, 200, TIMEOUT, 2000);" 
+                                onMouseOut="nd();">
+                        </FORM>
+                </div>'''
+                        
+                if len(self.inputFormParameters) > 0 and self.inputFormUrl != '':
+                        return form % (self.inputFormUrl,
+                                '&'.join(["%s=%s" % (k, v) for k, v in list(self.inputFormParameters.items())]))
+                else:
+                        return ''
+        
+        def getHeaderBarInputFormUrl(self):
+                return self.inputFormUrl
+                
+        def setHeaderBarInputFormUrl(self, url):
+                if type(url) == StringType:
+                        self.inputFormUrl = url
+        
+        def setHeaderBarInputFormParameters(self, parameters):
+                if type(parameters) == DictionaryType:
+                        self.inputFormParameters = parameters   
+                
+        def appendHeaderBarInputFormParameters(self, parameters):
+                if type(parameters) == DictionaryType:
+                        self.inputFormParameters.update(parameters)     
+                
+##      Template sections.  This pulls in our mgi standard templates.
+
+        def getTemplateHead(self):
+                return getFile(self.path+TEMPLATEHEAD)
+
+        def getTemplateBodyStart(self):
                 return getFile(self.path+TEMPLATEBODYSTART)
 
-	def getTemplateBodyStop(self):
+        def getTemplateBodyStop(self):
                 return getFile(self.path+TEMPLATEBODYSTOP)
                 
-##	Return JUST the title, javaScript, Css, templateHead and TemplateBodyStart 
+##      Return JUST the title, javaScript, Css, templateHead and TemplateBodyStart 
 
-	def getNavigation(self):
-		text = self.getContentType()
-		text = text + self.getCookies() + '\n'
-		text = text + self.getTemplateHead()
-		text = text + self.getTitle()
-		if len(self.css) != 0:
-			for item in self.css:
-				text = text + item
-		if len(self.javaScript_url) != 0:
-			for item in self.javaScript_url:
-				text = text + item
-		if len(self.javaScript) != 0:
-			for item in self.javaScript:
-				text = text + item					
-		text = text + self.getTemplateBodyStart()
-		return text
+        def getNavigation(self):
+                text = self.getContentType()
+                text = text + self.getCookies() + '\n'
+                text = text + self.getTemplateHead()
+                text = text + self.getTitle()
+                if len(self.css) != 0:
+                        for item in self.css:
+                                text = text + item
+                if len(self.javaScript_url) != 0:
+                        for item in self.javaScript_url:
+                                text = text + item
+                if len(self.javaScript) != 0:
+                        for item in self.javaScript:
+                                text = text + item                                      
+                text = text + self.getTemplateBodyStart()
+                return text
 
-##	Return JUSt the headerbar.  This is used in the construction of the next method mostly.
-	
-	def getGxdHeaderBar(self):
-		global IS_GXD_PAGE, GXD_LOGO, GXD_MINIHOME_URL
+##      Return JUSt the headerbar.  This is used in the construction of the next method mostly.
+        
+        def getGxdHeaderBar(self):
+                global IS_GXD_PAGE, GXD_LOGO, GXD_MINIHOME_URL
 
-		extra = ''
-		if self.headerSubText:
-			extra = ' style="padding-top:0px"'
+                extra = ''
+                if self.headerSubText:
+                        extra = ' style="padding-top:0px"'
 
-		if self.helpLink != '':
-			head = "<div id='titleBarWrapperGxd' userdoc='" + self.getHelpLink() +"'>\n"
-		else:
-			head = '<div id="titleBarWrapperGxd">\n'
-		head = head + '<div id="gxdLogoDiv">'
-		head = head + '<a href="' + GXD_MINIHOME_URL + '">' \
-				+ GXD_LOGO + '</a></div>'
-		head = head + '<div id="gxdCenteredTitle"' + extra + '>'
-		head = head + '<span class="titleBarMainTitleGxd" ' \
-			+ 'style="display:inline-block; margin-top: 20px;">'
-		head = head + self.getHeaderBarMainText()
-		head = head + '</span><br>\n'
-		if self.headerSubText != '':
-			head = head + self.getHeaderBarSubText()
-		head = head + '</div>\n'
-		head = head + '<div id="headerRightGxd">'
-		head = head + '</div>\n'
-		head = head + '</div>\n'
-		return head
+                if self.helpLink != '':
+                        head = "<div id='titleBarWrapperGxd' userdoc='" + self.getHelpLink() +"'>\n"
+                else:
+                        head = '<div id="titleBarWrapperGxd">\n'
+                head = head + '<div id="gxdLogoDiv">'
+                head = head + '<a href="' + GXD_MINIHOME_URL + '">' \
+                                + GXD_LOGO + '</a></div>'
+                head = head + '<div id="gxdCenteredTitle"' + extra + '>'
+                head = head + '<span class="titleBarMainTitleGxd" ' \
+                        + 'style="display:inline-block; margin-top: 20px;">'
+                head = head + self.getHeaderBarMainText()
+                head = head + '</span><br>\n'
+                if self.headerSubText != '':
+                        head = head + self.getHeaderBarSubText()
+                head = head + '</div>\n'
+                head = head + '<div id="headerRightGxd">'
+                head = head + '</div>\n'
+                head = head + '</div>\n'
+                return head
 
-	def getHeaderBar(self):
-		global IS_GXD_PAGE
+        def getHeaderBar(self):
+                global IS_GXD_PAGE
 
-		if IS_GXD_PAGE:
-			return self.getGxdHeaderBar()
+                if IS_GXD_PAGE:
+                        return self.getGxdHeaderBar()
 
-		if self.helpLink != '':
-			head = '<div id="titleBarWrapper" userdoc="' + self.getHelpLink() +'">\n'	
-		else:
-			head = '<div id="titleBarWrapper">\n'
-		head = head + self.getHeaderBarInputForm()
-		head = head + '<span class="titleBarMainTitle">'
-		head = head + self.getHeaderBarMainText()
-		head = head + '</span><br>\n'
-		if self.headerSubText != '':
-			head = head + '<span class="titleBarSubTitle">'
-			head = head + self.getHeaderBarSubText()
-			head = head + '</span>\n'
-		head = head + '</div>\n'
-		return head
+                if self.helpLink != '':
+                        head = '<div id="titleBarWrapper" userdoc="' + self.getHelpLink() +'">\n'       
+                else:
+                        head = '<div id="titleBarWrapper">\n'
+                head = head + self.getHeaderBarInputForm()
+                head = head + '<span class="titleBarMainTitle">'
+                head = head + self.getHeaderBarMainText()
+                head = head + '</span><br>\n'
+                if self.headerSubText != '':
+                        head = head + '<span class="titleBarSubTitle">'
+                        head = head + self.getHeaderBarSubText()
+                        head = head + '</span>\n'
+                head = head + '</div>\n'
+                return head
 
-##	Return both the navigation, and the headerbar.
+##      Return both the navigation, and the headerbar.
 
-	def getNavigationAndHeader(self):
-		head = self.getNavigation()
-		head = head + self.getHeaderBar()
-		return head
+        def getNavigationAndHeader(self):
+                head = self.getNavigation()
+                head = head + self.getHeaderBar()
+                return head
 
-##	Return the whole document
+##      Return the whole document
 
-	def getFullDocument(self):
-		head = self.getNavigationAndHeader()
-		if len(self.body) != 0:
-			for item in self.body:
-				head = head + item	
-		head = head + self.getTemplateBodyStop()
-		return head
+        def getFullDocument(self):
+                head = self.getNavigationAndHeader()
+                if len(self.body) != 0:
+                        for item in self.body:
+                                head = head + item      
+                head = head + self.getTemplateBodyStop()
+                return head
 
-##	Return the whole document, sans a header.
-		
-	def getFullDocumentNoHeader(self):
-		head = self.getNavigation()
-		if len(self.body) != 0:
-			for item in self.body:
-				head = head + item
-		head = head + self.getTemplateBodyStop()
-		return head
+##      Return the whole document, sans a header.
+                
+        def getFullDocumentNoHeader(self):
+                head = self.getNavigation()
+                if len(self.body) != 0:
+                        for item in self.body:
+                                head = head + item
+                head = head + self.getTemplateBodyStop()
+                return head
