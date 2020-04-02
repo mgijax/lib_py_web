@@ -26,7 +26,6 @@ import sys
 import urllib.request, urllib.parse, urllib.error
 import string
 import copy
-import regsub
 from types import *
 
 
@@ -179,8 +178,7 @@ class FieldStorage:
                         tmpItem = tmpItem[:-1]
                         fields[fieldName]['val'] = [tmpItem]
                     else:
-                        item.value = regsub.gsub(', ', ',',
-                            item.value)
+                        item.value = item.value.replace(', ', ',')
                         fields[fieldName]['val'] = \
                             string.split(item.value, ',')
                 else: # It's an instance

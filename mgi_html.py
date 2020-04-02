@@ -8,7 +8,6 @@ import string
 import types
 import time
 import regex
-import regsub
 import cgi
 import urllib.request, urllib.parse, urllib.error
 import random
@@ -362,8 +361,8 @@ def stripHtmlTags (
         # then do so before we strip out all the tags.
 
         if subLF:
-                s = regsub.gsub ('<[bB][rR]>', '\n', s)
-                s = regsub.gsub ('<[pP]>', '\n', s)
+                s = s.replace('<[bB][rR]>', '\n')
+                s = s.replace('<[pP]>', '\n')
 
         # finally, strip the HTML tags, leaving in place any delimiters in
         # mid-tag.  (This could happen if a tag was split across multiple
