@@ -10,9 +10,6 @@ import urllib.request, urllib.parse, urllib.error
 ###--- public global variables ---###
 ###-------------------------------###
 
-# standard exception raised by this module
-error = 'webshare.error'
-
 # error messages raised with 'error':
 
 DUPLICATE_ALIAS = 'A alias (%s) was found which is already a name or alias'
@@ -352,7 +349,7 @@ class SharedComponents:
                 try:
                         rcdfile = rcdlib.RcdFile (filepath, rcdlib.Rcd, 'name')
                 except rcdlib.error as message:
-                        raise error(RCDFILE_ERROR % (filepath, message))
+                        raise Exception(RCDFILE_ERROR % (filepath, message))
 
                 # each name or alias cited in the RcdFile should appear as a
                 # key in 'namesAliases' so that we can use it to check for
@@ -361,7 +358,7 @@ class SharedComponents:
                 namesAliases = {}
                 for name in list(rcdfile.keys()):
                         if hasSpace(name):
-                                raise error(SPACE_ERROR % ('name', name))
+                                raise Exception(SPACE_ERROR % ('name', name))
                         namesAliases[name] = 1
 
                 # walk through each defined rcd (one per shared component):
@@ -372,7 +369,7 @@ class SharedComponents:
 
                         url = rcd['url']
                         if not url:
-                                raise error(MISSING_FIELD % (
+                                raise Exception(MISSING_FIELD % (
                                                 filepath, name, 'url'))
 
                         # instantiate a new SharedComponent
@@ -386,9 +383,9 @@ class SharedComponents:
                         aliases = rcd.getAsList('alias')
                         for alias in aliases:
                                 if alias in namesAliases:
-                                        raise error(DUPLICATE_ALIAS % alias)
+                                        raise Exception(DUPLICATE_ALIAS % alias)
                                 if hasSpace(alias):
-                                        raise error(SPACE_ERROR % ('alias',
+                                        raise Exception(SPACE_ERROR % ('alias',
                                                 alias))
 
                                 self.aliasToName[alias] = name
@@ -474,6 +471,6 @@ class SharedComponents:
                         lines = fp.readlines()
                         fp.close()
                 except:
-                        raise error(READING_ERROR % self.rcdFilePath)
+                        raise Exception(READING_ERROR % self.rcdFilePath)
 
                 return string.join (lines, '')
