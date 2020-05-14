@@ -348,8 +348,8 @@ class SharedComponents:
 
                 try:
                         rcdfile = rcdlib.RcdFile (filepath, rcdlib.Rcd, 'name')
-                except rcdlib.error as message:
-                        raise Exception(RCDFILE_ERROR % (filepath, message))
+                except message:
+                        raise Exception(RCDFILE_ERROR % (filepath, str(message)))
 
                 # each name or alias cited in the RcdFile should appear as a
                 # key in 'namesAliases' so that we can use it to check for
