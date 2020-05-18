@@ -7,7 +7,6 @@ import os
 import string
 import types
 import time
-import regex
 import cgi
 import urllib.request, urllib.parse, urllib.error
 import random
