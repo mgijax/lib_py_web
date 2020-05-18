@@ -2,7 +2,6 @@
 # Purpose: provide access to info about shared web components (images, css,
 #       etc.) as defined by an RcdFile.
 
-import string
 import rcdlib
 import urllib.request, urllib.parse, urllib.error
 
@@ -35,7 +34,7 @@ def hasSpace (
         # Effects: nothing
         # Throws: nothing
 
-        return string.find(s, ' ') != -1
+        return s.find(' ') != -1
 
 def getConfig (url):
         # Purpose: Take the url passed to it, and return a string representing
@@ -252,7 +251,7 @@ class SharedComponent:
 
                 # build and return the complete tag
 
-                return '<%s>' % string.join(parts, ' ')
+                return '<%s>' % ' '.join(parts)
 
         def getStyleSheetTag (self):
                 # Purpose: get an HTML <LINK...> tag which loads this
@@ -277,9 +276,9 @@ class SharedComponent:
                 #       then we assume this component is a style-sheet.
                 #       Otherwise, we assume it is an image.
 
-                pos = string.rfind (self.url, '.')
+                pos = self.url.rfind ('.')
                 if pos != -1:
-                        if string.lower(self.url[pos:]) == '.css':
+                        if self.url[pos:].lower() == '.css':
                                 return self.getStyleSheetTag()
 
                 return self.getImgTag()
@@ -316,7 +315,7 @@ class SharedComponent:
                 # close the rcd entry and join the lines into a single string
 
                 lines.append (']')
-                return string.join (lines, '\n')
+                return '\n'.join (lines)
 
 class SharedComponents:
         # IS: a mapping from string names/aliases to their corresponding
@@ -476,4 +475,4 @@ class SharedComponents:
                 except:
                         raise error(READING_ERROR % self.rcdFilePath)
 
-                return string.join (lines, '')
+                return ''.join(lines)
