@@ -245,7 +245,7 @@ def escape(html):
         #       This was repaired in 10/97 to escape the '&' properly.  It was
         #       not being done before that.
         """
-        if html is not None and type(html) is bytes:
+        if html is not None and type(html) == str:
                 html = cgi.escape(html)
         else:
                 html = ''

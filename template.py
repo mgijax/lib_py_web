@@ -27,7 +27,6 @@
 
 
 import sys
-from types import *
 
 TEMPLATEHEAD = 'templateHeadNoReset.html'
 TEMPLATEBODYSTART = 'templateBodyStart.html'
@@ -117,13 +116,13 @@ class Template:
                 
         
         def setBody(self, Text):
-                if type(Text) == StringType:
+                if type(Text) == str:
                         self.body = [Text]
                 else:
                         self.body = Text
         
         def appendBody(self, Text):
-                if type(Text) == StringType:
+                if type(Text) == str:
                         self.body = self.body + [Text]
                 else:
                         self.body = self.body + Text    
@@ -131,7 +130,7 @@ class Template:
 ##      The Custom CSS Sections (This Needs to be finished up!)
         
         def setCSS(self, url):
-                if type(url) == StringType:
+                if type(url) == str:
                         self.css = ['<link rel="stylesheet" type="text/css" href="'+ url +'"/>']
                 else:
                         for eachUrl in url:
@@ -139,7 +138,7 @@ class Template:
 
 
         def appendCSS(self, url):
-                if type(url) == StringType:
+                if type(url) == str:
                         self.css = self.css + ['<link rel="stylesheet" type="text/css" href="'+ url +'"/>']
                 else:
                         for eachUrl in url:
@@ -151,7 +150,7 @@ class Template:
 ##      The Custom Javascript Include section. (This needs to be finished up!)
                 
         def setJavaScriptInclude(self, url):
-                if type(url) == StringType:
+                if type(url) == str:
                         self.javaScript_url = ['<script type="text/javascript" src="'+ url +'"></script>']
                 else:
                         for eachUrl in url:
@@ -161,7 +160,7 @@ class Template:
                 return self.javaScript_url
                 
         def appendJavaScriptInclude(self, url):
-                if type(url) == StringType:
+                if type(url) == str:
                         self.javaScript_url = self.javaScript_url['<script type="text/javascript" src="'+ url +'"></script>']
                 else:
                         for eachUrl in url:
@@ -170,7 +169,7 @@ class Template:
 ##      The Custom Script section. (This needs to be finished up!)
                 
         def setJavaScript(self, script):
-                if type(script) == StringType:
+                if type(script) == str:
                         self.javaScript = [script]
                 else:
                         self.javaScript = script        
@@ -179,7 +178,7 @@ class Template:
                 return self.javaScript
                 
         def appendJavaScript(self, script):
-                if type(script) == StringType:
+                if type(script) == str:
                         self.javaScript = [script]
                 else:
                         self.javaScript = script
@@ -234,15 +233,15 @@ class Template:
                 return self.inputFormUrl
                 
         def setHeaderBarInputFormUrl(self, url):
-                if type(url) == StringType:
+                if type(url) == str:
                         self.inputFormUrl = url
         
         def setHeaderBarInputFormParameters(self, parameters):
-                if type(parameters) == DictionaryType:
+                if type(parameters) == dict:
                         self.inputFormParameters = parameters   
                 
         def appendHeaderBarInputFormParameters(self, parameters):
-                if type(parameters) == DictionaryType:
+                if type(parameters) == dict:
                         self.inputFormParameters.update(parameters)     
                 
 ##      Template sections.  This pulls in our mgi standard templates.
