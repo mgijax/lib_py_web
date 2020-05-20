@@ -4,12 +4,12 @@
 
 import sys
 import os
-import string
 import types
 import time
 import cgi
 import urllib.request, urllib.parse, urllib.error
 import random
+import string
 from signal import signal, alarm, SIGALRM
 
 # global variable:
@@ -114,7 +114,7 @@ def mgiMaxReturn (
                         list.append(template % (fieldname, count, count))
 
         list.append ('<BR>')
-        return string.join (list, '\n')
+        return '\n'.join (list)
 
 
 def get_fields(content = None):
@@ -142,19 +142,24 @@ def get_fields(content = None):
         # Note -- httpd 1.3 does not close stdin
         # read exactly CONTENT_LENGTH bytes or the script will hang
         if content is None:
-                length = string.atoi(os.environ['CONTENT_LENGTH'])
+                length = int(os.environ['CONTENT_LENGTH'])
                 content = sys.stdin.read(length)
 
-        tokens = string.splitfields(content, '&')
+        tokens = content.split('&')
         for i in range(0, len(tokens)):
-                mapping = string.splitfields(string.joinfields(
-                        string.splitfields(string.strip(tokens[i]), '+'), ' '),
-                        '=')
-                mapping[1] = string.strip(url_unescape(mapping[1]))
+
+# old Python 2.x code:
+#                mapping = string.splitfields(string.joinfields(
+#                        string.splitfields(string.strip(tokens[i]), '+'), ' '),
+#                        '=')
+# new Python 3.7 code:
+                mapping = ' '.join(tokens[i].strip().split('+')).split('=')
+
+                mapping[1] = url_unescape(mapping[1]).strip()
                 if mapping[1] == '':
                         continue
                 mapping = url_unescape(mapping[0]), mapping[1]
-                type = string.splitfields(mapping[0], ':')
+                type = mapping[0].split(':')
                 if len(type) == 1:
                         fields[type[0]] = mapping[1]
                 elif type[0] == 'op':
@@ -175,13 +180,13 @@ def get_fields(content = None):
         for key in list(fields.keys()):
                 if key in types and key in operators:
                         operator = operators[key]
-                        if string.lower(operator) == 'is null':
+                        if operator.lower() == 'is null':
                                 del fields[key]
                                 continue
                         if key == 'symbol':
-                                l = string.split(fields[key], ',')
+                                l = fields[key].split(',')
                                 for i in range(len(l)):
-                                        l[i] = string.strip(l[i])
+                                        l[i] = l[i].strip()
 
                                 if operator == 'begins':
                                         for i in range(len(l)):
@@ -192,7 +197,7 @@ def get_fields(content = None):
                                 elif operator == 'contains':
                                         for i in range(len(l)):
                                                 l[i] = '%' + l[i] + '%'
-                                elif string.lower(operator) == 'is null':
+                                elif operator.lower() == 'is null':
                                         del fields[key]
                                         continue
                                 else:
@@ -207,7 +212,7 @@ def get_fields(content = None):
                                         fields[key] = '%' + fields[key]
                                 elif operator == 'contains':
                                         fields[key] = '%' + fields[key] + '%'
-                                elif string.lower(operator) == 'is null':
+                                elif operator.lower() == 'is null':
                                         del fields[key]
                                         continue
                                 else:
@@ -223,7 +228,7 @@ def get_fields(content = None):
                                 operators[key] = '!' + operators[key]
                         elif operator == 'like':
                                 operators[key] = 'not' + ' ' + operators[key]
-                        elif string.lower(operator) == 'is null':
+                        elif operator.lower() == 'is null':
                                 operators[key] = 'is not null'
         result =  fields, operators, types
         return result
@@ -331,7 +336,7 @@ def doSubSupTags (
 
         # join the elements in 't' into a single string and return it
 
-        return string.join (t, '')
+        return ''.join (t)
 
 def stripHtmlTags (
         source,         # string or list of strings; text to have its HTML
@@ -370,7 +375,7 @@ def stripHtmlTags (
         s = deleteTags (s, delimiter)
 
         if delimiter:
-                return string.split (s, delimiter)
+                return s.split(delimiter)
         return s
 
 ###--- Private Functions ---###
@@ -398,7 +403,7 @@ def joinUnique (
                 # break out and try the next 'standard_separator'
 
                 for item in list:
-                        if string.find (item, sep) != -1:
+                        if item.find(sep) != -1:
                                 break
 
                 # if this loop ended normally (without a 'break'), then we
@@ -415,7 +420,7 @@ def joinUnique (
         # one of the strings of 'list'.
 
         if not separator:
-                sep = random.choice (string.letters)
+                sep = random.choice (string.ascii_letters)
                 while 1:
                         # we need to see if the current 'sep' occurs in a
                         # string of 'list'.
@@ -425,9 +430,9 @@ def joinUnique (
                                 # if it occurs, then add a new random letter
                                 # to the end and try again.
 
-                                if string.find (item, sep) != -1:
+                                if item.find(sep) != -1:
                                         sep = sep + \
-                                                random.choice (string.letters)
+                                                random.choice (string.ascii_letters)
                                         break
 
                         # if the 'for' loop terminates normally, then we have
@@ -440,7 +445,7 @@ def joinUnique (
 
         # finally, join the list into a string and return the two-item tuple
 
-        return string.join (list, separator), separator
+        return separator.join (list), separator
 
 def deleteTags (
         s,              # string from which to remove HTML tags
@@ -481,7 +486,7 @@ def deleteTags (
 
                         if delimiter:
                                 stripped = delimiter * \
-                                        string.count (tag, delimiter)
+                                        tag.count (delimiter)
                         else:
                                 stripped = ''
 
